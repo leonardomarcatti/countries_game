@@ -6,17 +6,17 @@ use Closure;
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
 
-class MainLayout extends Component
+class top extends Component
 {
     /**
      * Create a new component instance.
      */
 
-    public string $pageTitle = '';
+    public string $title = '';
 
-    public function __construct(string $pageTitle)
+    public function __construct(string $title)
     {
-        $this->pageTitle = $pageTitle;
+        $this->title = $title;
     }
 
     /**
@@ -24,6 +24,6 @@ class MainLayout extends Component
      */
     public function render(): View|Closure|string
     {
-        return view('components.main-layout');
+        return view('components.top');
     }
 }
