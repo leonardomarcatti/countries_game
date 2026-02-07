@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\View\View;
 
+use function Pest\Laravel\session;
 
 class MainController extends Controller
 {
@@ -66,6 +67,21 @@ class MainController extends Controller
         $totalQuestions = \intval($r->total_questions);
 
         $quiz = $this->prepareQuiz($totalQuestions);
-        dd($quiz);
+        $r->session()->put(['quiz' => $quiz, 'total_questions' => $totalQuestions, 'current_question' => 1, 'correct_answers' => 0, 'wrong_answers' => 0]);
+
+        return \redirect()->to('game');
+    }
+
+    public function game(Request $r)
+    {
+        $quiz = $r->session()->get('quiz');
+        $total_questions = $r->session()->get('total_questions');
+        $current_question = $r->session()->get('current_question') - 1;
+        $answers = $quiz[$current_question]['wrong_answers'];
+        $answers[] = $quiz[$current_question]['correct_answer'];
+        \shuffle($answers);
+
+        return view('game', ['country' => $quiz[$current_question]['wrong_answers'], 'total_questions' => $total_questions, 'current_question' => $current_question, 'answers' => $answers]);
+
     }
 }
