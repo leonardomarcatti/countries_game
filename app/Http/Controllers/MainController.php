@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Crypt;
 use Illuminate\View\View;
 
 use function Pest\Laravel\session;
@@ -67,21 +67,56 @@ class MainController extends Controller
         $totalQuestions = \intval($r->total_questions);
 
         $quiz = $this->prepareQuiz($totalQuestions);
-        $r->session()->put(['quiz' => $quiz, 'total_questions' => $totalQuestions, 'current_question' => 1, 'correct_answers' => 0, 'wrong_answers' => 0]);
 
-        return \redirect()->to('game');
+        \session()->put(['quiz' => $quiz, 'total_questions' => $totalQuestions, 'current_question' => 1, 'correct_answers' => 0, 'wrong_answers' => 0]);
+
+        return \redirect()->route('game');
     }
 
-    public function game(Request $r)
+    public function game() : View
     {
-        $quiz = $r->session()->get('quiz');
-        $total_questions = $r->session()->get('total_questions');
-        $current_question = $r->session()->get('current_question') - 1;
+        $quiz = \session()->get('quiz');
+        $total_questions = \session()->get('total_questions');
+        $current_question = \session()->get('current_question') - 1;
         $answers = $quiz[$current_question]['wrong_answers'];
         $answers[] = $quiz[$current_question]['correct_answer'];
         \shuffle($answers);
+        $data = ['country' => $quiz[$current_question]['country'], 'totalQuestions' => $total_questions, 'currentQuestion' => $current_question, 'answers' => $answers];
 
-        return view('game', ['country' => $quiz[$current_question]['wrong_answers'], 'total_questions' => $total_questions, 'current_question' => $current_question, 'answers' => $answers]);
+        return view('game', $data);
 
+    }
+
+    public function answer($cript)
+    {
+        try {
+            $answer =  Crypt::decryptString($cript);
+        } catch (\Exception $error) {
+            return back();
+        }
+
+        $quiz = \session('quiz');
+        $current_question = \session('current_question') - 1;
+        $correct_answer = \session('correct_answer');
+        $correct_answers = \session('correct_answers');
+        $wrong_answers = \session('wrong_answers');
+
+        if ($answer == $correct_answer) {
+            $correct_answers++;
+            $quiz[$current_question]['correct'] = \true;
+        } else {
+            $wrong_answers++;
+            $quiz[$current_question]['correct'] = \false;
+        }
+
+        \session()->put(['quiz' => $quiz, 'correct_answers' => $correct_answers, 'wrong_answers' => $wrong_answers]);
+
+        $data = [
+            'country' => $quiz[$current_question]['country'],
+            'correct_answer' => $correct_answer,
+            'chosen_answer' => $answer,
+            'current_question' => $current_question,
+            'total_questions' => \session()->get('total_questions')
+        ];
     }
 }

@@ -8,4 +8,5 @@ Route::controller(MainController::class)->group(function(){
     Route::get('/', 'home')->name('home');
     Route::post('/', 'prepareGame')->name('prepareGame');
     Route::get('/game', 'game')->name('game');
+    Route::get('/answer/{answer}', 'answer')->name('answer');
 });
