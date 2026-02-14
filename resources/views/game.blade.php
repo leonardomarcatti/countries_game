@@ -7,7 +7,7 @@
             @endforeach
         </div>
         <div class="text-center mt-5">
-            <a href="#" class="btn btn-outline-danger mt-3 px-5">CANCELAR JOGO</a>
+            <a href="{{route('home')}}" class="btn btn-outline-danger mt-3 px-5">CANCELAR JOGO</a>
         </div>
     </main>
 </x-layout.layout>

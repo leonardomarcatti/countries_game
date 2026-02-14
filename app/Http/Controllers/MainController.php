@@ -141,7 +141,9 @@ class MainController extends Controller
 
     public function calculatePercentage() : float
     {
-        return round(\session('correct_answers') / \session('total_questions') * 100, 2 );
+        $correct = \session('correct_answers');
+        $total = \session('total_questions');
+        return round($correct/$total * 100, 2 );
     }
 
     public function showResults(): View
