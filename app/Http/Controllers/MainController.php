@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Facades\Redirect;
 use Illuminate\View\View;
 
 use function Pest\Laravel\session;
@@ -24,7 +26,7 @@ class MainController extends Controller
         return \view('home');
     }
 
-    private function prepareQuiz(int $totalQuestions)
+    private function prepareQuiz(int $totalQuestions): array
     {
         $questions = [];
         $total_countries = count($this->app_data);
@@ -52,7 +54,7 @@ class MainController extends Controller
         return $questions;
     }
 
-    public function prepareGame(Request $r)
+    public function prepareGame(Request $r): RedirectResponse
     {
 
         $r->validate([
@@ -87,17 +89,17 @@ class MainController extends Controller
 
     }
 
-    public function answer($cript)
+    public function answer($cript): View|RedirectResponse
     {
         try {
             $answer =  Crypt::decryptString($cript);
         } catch (\Exception $error) {
-            return back();
+            return \redirect()->back();
         }
 
         $quiz = \session('quiz');
         $current_question = \session('current_question') - 1;
-        $correct_answer = \session('correct_answer');
+        $correct_answer = $quiz[$current_question]['correct_answer'];
         $correct_answers = \session('correct_answers');
         $wrong_answers = \session('wrong_answers');
 
@@ -116,7 +118,42 @@ class MainController extends Controller
             'correct_answer' => $correct_answer,
             'chosen_answer' => $answer,
             'current_question' => $current_question,
-            'total_questions' => \session()->get('total_questions')
+            'total_questions' => \session('total_questions')
         ];
+
+
+        return \view('answer_result', $data);
+    }
+
+    public function nextQuestion() : RedirectResponse
+    {
+        $current_question = \session('current_question');
+        $total_questions = \session('total_questions');
+
+        if ($current_question < $total_questions) {
+            $current_question++;
+            \session()->put(['current_question' => $current_question]);
+            return \redirect()->route('game');
+        } else {
+            return \redirect()->route('show_results');
+        }
+    }
+
+    public function calculatePercentage() : float
+    {
+        return round(\session('correct_answers') / \session('total_questions') * 100, 2 );
+    }
+
+    public function showResults(): View
+    {
+        echo "<h1>Resultados finais</h1>";
+
+        $data = [
+            'total_questions' => \session('total_questions'),
+            'correct_answers' => \session('correct_answers'),
+            'wrong_answers' => \session('wrong_answers'),
+            'percentage' => $this->calculatePercentage(),
+        ];
+        return view('final', $data);
     }
 }
