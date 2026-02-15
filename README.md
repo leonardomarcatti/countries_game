@@ -84,9 +84,8 @@
 
 <h2>📸 Screenshots</h2>
 <img width="500" height="350" alt="{01BB49EA-B261-488C-A25B-EA332424DFB8}" src="https://github.com/user-attachments/assets/523aa1a1-5afb-4444-88d7-bbe776dba140" />
-
 <img width="500" height="350" alt="{50D96C25-14E6-4200-9BB0-A516D1B51659}" src="https://github.com/user-attachments/assets/05a2e63f-227f-4ca8-ab42-3f0dc9a6b7d9" />
-
+<img width="500" height="350" alt="{C2EDE535-D867-468D-837D-68AC8DEAEFDE}" src="https://github.com/user-attachments/assets/cdb1a86a-3b6d-4b8f-933a-6fad5e8d0ca2" />
 
 <h2>
 👨‍💻 Author</h2>
