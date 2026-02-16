@@ -57,7 +57,7 @@
 </ol>
 
 <h2>Access the application:</h2>
-<p>http://host_ip:8000</p>
+<p>http://host_ip:3000</p>
 
 <h2>Stop Containers</h2>
 <p>docker compose down</p>

@@ -1,5 +1,5 @@
 <x-layout.layout pageTitle="Countries and Capitals Quiz">
-    <div class="container">
+    <main class="container">
 
         <x-question :country="$country" :currentQuestion="$current_question" :totalQuestions="$total_questions" />
 
@@ -14,6 +14,6 @@
         <div class="text-center mt-5">
             <a href="{{route('next_question')}}" class="btn btn-primary mt-3 px-5">AVANÇAR</a>
         </div>
-    </div>
+    </main>
 
 </x-layout.layout>

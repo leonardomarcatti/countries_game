@@ -1,7 +1,6 @@
 <x-layout.layout pageTitle="Countries and Capitals Quiz">
 
-    <div class="container">
-
+    <main class="container">
         <div class="text-center fs-3 mb-3">
             <p class="text-info">RESULTADOS FINAIS</p>
         </div>
@@ -29,6 +28,5 @@
         <div class="text-center mt-5">
             <a href="{{route('home')}}" class="btn btn-primary mt-3 px-5">VOLTAR AO INÍCIO</a>
         </div>
-
-    </div>
+    </main>
 </x-layout.layout>
